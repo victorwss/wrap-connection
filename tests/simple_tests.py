@@ -77,3 +77,41 @@ def test_simple():
         if os.path.exists(db1):
             os.remove(db1)
         assert not os.path.exists(db1)
+
+some_counter = 0
+
+def make_cursor(con):
+    global some_counter
+    some_counter += 1
+    return con.cursor()
+
+def make_connection_3():
+    import sqlite3
+    return {"db_connect": lambda : sqlite3.connect(db1), "cursor_factory": make_cursor}
+
+@transact(**make_connection_3())
+def another_op():
+    assert some_counter == 6
+    cursor.execute(create_table_sql)
+    connection.commit()
+    insert_sql = "INSERT INTO persons (id, name) VALUES (4, 'Foe')"
+    cursor.execute(insert_sql)
+    connection.commit()
+    select_sql = "SELECT id, name FROM persons"
+    result = []
+    cursor.execute(select_sql)
+    r = cursor.fetchone()
+    assert r[0] == 4
+    assert r[1] == 'Foe'
+
+def test_custom_cursor():
+    try:
+        global some_counter
+        assert not os.path.exists(db1)
+        some_counter = 5
+        another_op()
+        assert os.path.exists(db1)
+    finally:
+        if os.path.exists(db1):
+            os.remove(db1)
+        assert not os.path.exists(db1)

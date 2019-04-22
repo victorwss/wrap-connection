@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="wrap-connection",
-    version="1.0.0.0",
+    version="1.0.0.2",
     author="Victor Williams Stafusa da Silva",
     author_email="victorwssilva@gmail.com",
     description="Easily wrap connections and cursors by using decorators.",
