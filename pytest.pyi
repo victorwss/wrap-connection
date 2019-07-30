@@ -1,0 +1,16 @@
+from typing import Any, Callable, Type, NoReturn, TypeVar
+
+_T = TypeVar("_T", bound = Callable[..., Any])
+
+class Marker:
+    @classmethod
+    def xfail(cls, condition: bool, reason: str) -> Callable[..., Any]: ...
+
+    @staticmethod
+    def timeout(x: int) -> Callable[[_T], _T]: ...
+
+mark = Marker()
+
+def fixture(*args: Any, **kwargs: Any) -> Callable[..., Any]: ...
+def raises(error: Any) -> Any: ...
+def fail(message: str) -> NoReturn: ...
